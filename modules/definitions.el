@@ -1,7 +1,7 @@
 ;; -*- lexical-binding: t; -*-
 
 (defconst home-dir
-  (getenv "HOME")
+  (concat (getenv "HOME") "/")
   "home (~) directory")
 
 (defconst emacs-dir
@@ -9,62 +9,73 @@
   "Emacs config directory")
 
 (defconst emacs-cache
-  (expand-file-name "cache" user-emacs-directory)
+  (concat emacs-dir "cache/")
   "Emacs config subdirectory for cached files")
 
 (defconst emacs-modules
-  (expand-file-name "modules" user-emacs-directory)
+  (concat emacs-dir "modules/")
   "Directory for modular Emacs configurations")
 
 (defconst emacs-local
-  (expand-file-name "local" user-emacs-directory)
+  (concat emacs-dir "local/")
   "Directory for locally installed elisp files")
 
+(defconst emacs-assets
+  (concat emacs-dir "assets/")
+  "Directory to store images and other files for use in configuration")
+
 (defconst xdg/config-home
-  (expand-file-name ".config" home-dir)
+  (concat home-dir ".config/")
   "~/.config XDG directory")
 
 (defconst xdg/cache-home
-  (expand-file-name ".cache" home-dir)
+  (concat home-dir ".cache/")
   "~/.cache XDG directory")
 
 (defconst xdg/data-home
-  (expand-file-name ".local/share" home-dir)
+  (concat home-dir ".local/share/")
   "~/.local/share XDG directory")
 
 (defconst xdg/state-home
-  (expand-file-name ".local/state" home-dir)
+  (concat home-dir ".local/state/")
   "~/.local/state XDG directory")
 
 (defconst xdg/bin-home
-  (expand-file-name ".local/bin" home-dir)
+  (concat home-dir ".local/bin/")
   "~/.local/bin XDG directory")
 
 (defconst user/projects-dir
-  (expand-file-name "Projects" home-dir)
-  "~/Projects directory")
+  (concat home-dir "Projects/")
+  "~/Projects")
 
 (defconst user/pictures-dir
-  (expand-file-name "Pictures" home-dir))
+  (concat home-dir "Pictures/")
+  "~/Pictures")
 
-(setopt custom-file
-  (expand-file-name "custom.el" emacs-cache))
+(defconst user/desktop-dir
+  (concat home-dir "Desktop/")
+  "~/Desktop")
 
-(setopt load-path
-  (cons emacs-local load-path))
+(defconst user/downloads-dir
+  (concat home-dir "Downloads/")
+  "~/Downloads")
 
-(setopt load-path
-  (cons emacs-modules load-path))
+(defconst user/documents-dir
+  (concat home-dir "Documents/")
+  "~/Documents")
+
+(defconst user/videos-dir
+  (concat home-dir "Videos/")
+  "~/Videos")
+
+(defconst user/music-dir
+  (concat home-dir "Music/")
+  "~/Music")
 
 (defun reload/font-lock ()
   (interactive)
-  (load-library "font-lock-setup.el")
+  (require 'font-lock-setup)
   (message "[emacs] *>>> reload: font-lock settings"))
-
-(defun reqwire (name)
-  "load-library and print a message about it"
-  (load-library name)
-  (message "[emacs] *>>> reqwire: %s" name))
 
 (defun mkdir-ifnot (dir)
   "Create directory if not already created"

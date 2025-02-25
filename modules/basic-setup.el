@@ -1,7 +1,8 @@
 ;; -*- lexical-binding: t; -*-
 
 (defconst backups-dir
-  (expand-file-name "backups" emacs-cache))
+  (concat emacs-cache "backups")
+  "directory for emacs to store backup files")
 
 (mkdir-ifnot backups-dir)
 
@@ -10,9 +11,9 @@
         kept-new-versions 5
         delete-old-versions t)
 
-(mkdir-ifnot (expand-file-name "auto-save" emacs-cache))
+(mkdir-ifnot (concat emacs-cache "auto-save"))
 (setopt auto-save-list-file-prefix
-  (expand-file-name "auto-save/save-" emacs-cache))
+  (concat emacs-cache "auto-save/save-"))
 
 (setopt auto-save-default nil)
 
@@ -40,32 +41,28 @@
 (setopt find-file-visit-truename nil)   ;; treat symlinks as if they were normal files
 (setopt vc-follow-symlinks nil)
 
-(reqwire "autorevert")                       ;; auto-revert setup
+(require 'autorevert)                   ;; auto-revert setup
 (setopt auto-revert-verbose nil)
 (global-auto-revert-mode t)
 
-(reqwire "savehist")
-(setopt savehist-file
-  (expand-file-name "savehist" emacs-cache))
+(require 'savehist)
+(setopt savehist-file (concat emacs-cache "savehist"))
 (savehist-mode t)
 
-(reqwire "recentf")
-(setopt recentf-save-file
-  (expand-file-name "recentf" emacs-cache))
+(require 'recentf)
+(setopt recentf-save-file (concat emacs-cache "recentf"))
 (recentf-mode t)
 
-(reqwire "time")
+(require 'time)
 (setopt display-time-default-load-average nil)
 (setopt display-time-format "%I:%M %p")
 (display-time-mode t)
 
-(with-eval-after-load 'tramp
-  (setopt tramp-persistency-file-name
-    (expand-file-name "tramp" emacs-cache)))
+(setopt tramp-persistency-file-name (concat emacs-cache "tramp"))
 
-(mkdir-ifnot (expand-file-name "transient" emacs-cache))
-(setopt transient-levels-file (expand-file-name "transient/levels" emacs-cache))
-(setopt transient-values-file (expand-file-name "transient/values" emacs-cache))
-(setopt transient-history-file (expand-file-name "transient/history" emacs-cache))
+(mkdir-ifnot (concat emacs-cache "transient"))
+(setopt transient-levels-file (concat emacs-cache "transient/levels")
+        transient-values-file (concat emacs-cache "transient/values")
+        transient-history-file (concat emacs-cache "transient/history"))
 
 (provide 'basic-setup)

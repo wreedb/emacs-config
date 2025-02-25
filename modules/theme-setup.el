@@ -1,6 +1,6 @@
 ;; -*- lexical-binding: t; -*-
 
-(reqwire "kaolin-themes")
+(require 'kaolin-themes)
 
 (with-eval-after-load 'doom-themes
   (setopt doom-themes-enable-bold t

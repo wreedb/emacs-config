@@ -1,7 +1,7 @@
 ;; -*- lexical-binding: t; -*-
 
-(setopt package-user-dir (expand-file-name "packages" emacs-dir))
-(setopt package-gnupghome-dir (expand-file-name "packages/gnupghome" emacs-dir))
+(setopt package-user-dir (concat emacs-dir "packages/"))
+(setopt package-gnupghome-dir (concat package-user-dir "gnupghome/"))
 (setopt package-native-compile t)
 
 (setopt package-archives
@@ -9,7 +9,7 @@
    ("nongnu" . "https://elpa.nongnu.org/nongnu/")
    ("melpa"  . "https://melpa.org/packages/")))
 
-(reqwire "package")
+(require 'package)
 (package-initialize)
 
 (setopt package-selected-packages

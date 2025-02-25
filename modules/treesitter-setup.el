@@ -1,6 +1,6 @@
 ;; -*- lexical-binding: t; -*-
 
-(reqwire "treesit")
+(require 'treesit)
 
 (setopt treesit-language-source-alist
  (append

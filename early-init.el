@@ -1,9 +1,9 @@
 ;; -*- lexical-binding: t; -*-
 
-(unless (file-exists-p (expand-file-name "native" user-emacs-directory))
-  (mkdir (expand-file-name "native" user-emacs-directory) t))
+(unless (file-exists-p (concat user-emacs-directory "native"))
+  (mkdir (concat user-emacs-directory "native") t))
 
-(setopt native-compile-target-directory (expand-file-name "native" user-emacs-directory))
+(setopt native-compile-target-directory (concat user-emacs-directory "native/"))
 (setopt native-comp-eln-load-path
   (cons native-compile-target-directory native-comp-eln-load-path))
 
@@ -21,26 +21,33 @@
     (font . "JetBrains Mono-14"))
   default-frame-alist))
 
-(unless (file-exists-p (expand-file-name "cache" user-emacs-directory))
-  (mkdir (expand-file-name "cache" user-emacs-directory) t))
+(unless (file-exists-p (concat user-emacs-directory "cache"))
+  (mkdir (concat user-emacs-directory "cache") t))
 
-;; (startup-redirect-eln-cache
-;;   (expand-file-name "cache/eln" user-emacs-directory))
+(unless (file-exists-p (concat user-emacs-directory "local"))
+  (mkdir (concat user-emacs-directory "local") t))
 
-(unless (file-exists-p (expand-file-name "local" user-emacs-directory))
-  (mkdir (expand-file-name "local" user-emacs-directory) t))
+(unless (file-exists-p (concat user-emacs-directory "modules"))
+  (mkdir (concat user-emacs-directory "modules") t))
 
-(unless (file-exists-p (expand-file-name "modules" user-emacs-directory))
-  (mkdir (expand-file-name "modules" user-emacs-directory) t))
-
-(advice-add 'startup-echo-area-message :override #'(lambda () (message "Finished loading, welcome in.")))
+(advice-add 'startup-echo-area-message
+  :override #'(lambda () (message "[emacs] *>>> finished startup")))
 
 (setopt tool-bar-mode nil)
 (setopt menu-bar-mode nil)
 (setopt tooltip-mode nil)
 
-;; (setq native-comp-async-report-warnings-errors 'silent)
-(setq warning-minimum-level 'emergency)
+(setq native-comp-async-report-warnings-errors 'silent)
+(setq warning-minimum-level 'error)
 (setq warning-minimum-log-level 'error)
 (setq byte-compile-warnings '(not obsolete))
-;; (setq warning-suppress-log-types '((comp) (bytecomp)))
+(setq warning-suppress-log-types '((comp) (bytecomp)))
+
+(setopt load-path
+  (cons (concat user-emacs-directory "local/") load-path))
+
+(setopt load-path
+  (cons (concat user-emacs-directory "modules/") load-path))
+
+(setopt custom-file
+  (concat user-emacs-directory "cache/custom.el"))

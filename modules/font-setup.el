@@ -1,6 +1,6 @@
 ;; -*- lexical-binding: t; -*-
 
-(reqwire "ligature")
+(require 'ligature)
 
 (set-face-attribute 'default nil
   :family "JetBrains Mono"

@@ -1,5 +1,6 @@
 ;; -*- lexical-binding: t; -*-
 
+(require 'font-lock)
 (set-face-attribute 'help-key-binding nil
                     :background "unspecified"
                     :foreground "unspecified"

@@ -1,6 +1,6 @@
 ;; -*- lexical-binding: t; -*-
 
-(reqwire "eglot")
+(require 'eglot)
 
 (setq eglot-server-programs
   (append

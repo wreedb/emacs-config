@@ -1,7 +1,7 @@
 ;; -*- lexical-binding: t; -*-
 
-(reqwire "which-key")
-(reqwire "general")
+(require 'which-key)
+(require 'general)
 
 ;; which-key configuration
 (setopt which-key-side-window-location 'bottom)
@@ -57,7 +57,7 @@
   "f e"   '(:ignore t       :wk "edit emacs config")
   "f e c" '((lambda () (interactive) (counsel-find-file nil user-emacs-directory)) :wk "browse emacs dir")
   "f e i" '((lambda () (interactive) (find-file user-init-file)) :wk "edit init.el")
-  "f e e" '((lambda () (interactive) (find-file (expand-file-name "early-init.el" emacs-dir))) :wk "edit early-init.el"))
+  "f e e" '((lambda () (interactive) (find-file (concat emacs-dir "early-init.el"))) :wk "edit early-init.el"))
 
 ;; commenting commands
 (general-keys
@@ -97,7 +97,7 @@
   "r f"   '(reload/font-lock    :wk "reload font-lock")
   "r e"   '(:ignore t           :wk "emacs dir")
   "r e i" '((lambda () (interactive) (load user-init-file)) :wk "load init.el")
-  "r e e" '((lambda () (interactive) (load (expand-file-name "early-init.el" emacs-dir))) :wk "load early-init.el"))
+  "r e e" '((lambda () (interactive) (load (concat emacs-dir "early-init.el"))) :wk "load early-init.el"))
 
 ;; window management commands
 (general-keys

@@ -1,6 +1,6 @@
 ;; -*- lexical-binding: t; -*-
 
-(reqwire "dashboard")
+(require 'dashboard)
 
 ;; (defun make-bullshit-phrase ()
 ;;   "Return a string of tech-bro nonsense"
@@ -12,13 +12,10 @@
 
 (setopt dashboard-display-icons-p t)
 (setopt dashboard-icon-type 'nerd-icons)
-;; (setopt dashboard-set-heading-icons t)
 (setopt dashboard-set-file-icons t)
-;; (setopt dashboard-banner-logo-title bullshit)
 
 (setopt dashboard-startup-banner
-  (expand-file-name "assets/emacs.txt" emacs-dir))
-;;        (expand-file-name "assets/gnu_color.png" emacs-dir))
+  (concat emacs-assets "emacs.txt"))
 
 (setopt dashboard-center-content t
         dashboard-vertically-center-content t)

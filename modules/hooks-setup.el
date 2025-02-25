@@ -1,6 +1,11 @@
 ;; -*- lexical-binding: t; -*-
 
-(add-hook-list #'display-line-numbers-mode '(prog-mode-hook emacs-lisp-mode-hook conf-mode-hook toml-ts-mode text-mode-hook))
+(add-hook-list #'display-line-numbers-mode
+  '(prog-mode-hook
+    emacs-lisp-mode-hook
+    conf-mode-hook
+    toml-ts-mode-hook
+    text-mode-hook))
 
 (add-hook-list #'highlight-defined-mode
  '(prog-mode-hook
@@ -23,7 +28,7 @@
 (add-hook-list #'evil-cleverparens-mode
  '(emacs-lisp-mode-hook
    lisp-mode-hook
-   scheme-mode))
+   scheme-mode-hook))
 
 (advice-add 'colorful-add-color-names :override #'ignore)
 (add-hook-list #'colorful-mode
