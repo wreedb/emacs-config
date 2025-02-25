@@ -1,0 +1,42 @@
+#+AUTHOR: Will Reed
+
+I decided to separate my Emacs configuration from my [[https://github.com/wreedb/config][wreedb/config]] repository 
+because my Emacs directory became more elaborate than anything else in 
+=~/.config=. I also have started preaching the good word of Emacs, so having 
+a repository to send people to that just has my Emacs configuration and 
+nothing else is more sensible.
+
+*** Main points
++ No ~(use-package)~
+  + sluggish performance
+  + themes loaded through it override ~font-lock~ settings
++ No elpaca/straight, just plain old ~package.el~
++ corfu instead of company
++ telephone-line
++ dired-sidebar instead of treemacs
++ nerd-icons (and related integrations)
++ org-modern-mode
++ Keeping the ~user-emacs-directory~ strictly clean
+  + ~#filename#~ all over the place? No.
+  + Every package putting files in the config directory? No.
++ Avoiding legacy functions
+  + ~(setopt ...)~ whenever possible
+  + good: ~keymap-global-set~
+  + bad: ~global-set-key~
++ ~custom.el~? never heard of them.
++ evil-mode + undo-fu
++ general.el + which-key
++ JetBrains Mono + ligature.el
++ eglot for LSP usage
++ Featureful but still lightweight and clean
+
+I made a full effort to rewrite my config to work with without ~use-package~
+or a third-party package manager. My motivation was to see just
+how much of an effect it would have on startup time.
+
+The result surprised me anyway.
+
+external package manager + ~use-package~
+- Average startup time of 2.8-3 seconds
+with just ~package.el~ and manual configuration
+- Average startup time of 1.4-1.5 seconds
