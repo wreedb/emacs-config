@@ -10,12 +10,9 @@
         kept-new-versions 5
         delete-old-versions t)
 
-(defconst auto-save-dir
-  (expand-file-name "auto-save" emacs-cache))
-
-(mkdir-ifnot auto-save-dir)
+(mkdir-ifnot (expand-file-name "auto-save" emacs-cache))
 (setopt auto-save-list-file-prefix
-  (expand-file-name "save-" auto-save-dir))
+  (expand-file-name "auto-save/save-" emacs-cache))
 
 (setopt auto-save-default nil)
 
@@ -43,23 +40,21 @@
 (setopt find-file-visit-truename nil)   ;; treat symlinks as if they were normal files
 (setopt vc-follow-symlinks nil)
 
-(setopt load-prefer-newer t)            ;; prefer a newer .el file over an older .elc/.eln
-
-(req 'autorevert)                       ;; auto-revert setup
+(reqwire "autorevert")                       ;; auto-revert setup
 (setopt auto-revert-verbose nil)
 (global-auto-revert-mode t)
 
-(req 'savehist)
+(reqwire "savehist")
 (setopt savehist-file
   (expand-file-name "savehist" emacs-cache))
 (savehist-mode t)
 
-(req 'recentf)
+(reqwire "recentf")
 (setopt recentf-save-file
   (expand-file-name "recentf" emacs-cache))
 (recentf-mode t)
 
-(req 'time)
+(reqwire "time")
 (setopt display-time-default-load-average nil)
 (setopt display-time-format "%I:%M %p")
 (display-time-mode t)

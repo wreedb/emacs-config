@@ -1,8 +1,8 @@
 ;; -*- lexical-binding: t; -*-
 
-(req 'treesit)
+(reqwire "treesit")
 
-(setq treesit-language-source-alist
+(setopt treesit-language-source-alist
  (append
   '((hyprlang    "https://github.com/tree-sitter-grammars/tree-sitter-hyprlang")
     (c           "https://github.com/tree-sitter/tree-sitter-c")
@@ -22,10 +22,5 @@
     (lua         "https://github.com/tjdevries/tree-sitter-lua")
     (zig         "https://github.com/maxxnino/tree-sitter-zig"))
  treesit-language-source-alist))
-
-(defun batch-install-treesit-parsers ()
-  "Install all treesitter parsers back-to-back"
-  (interactive)
-  (mapc #'treesit-install-language-grammar (mapcar #'car treesit-language-source-alist)))
 
 (provide 'treesitter-setup)

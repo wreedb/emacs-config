@@ -1,5 +1,6 @@
 # -*- mode: conf-unix; -*-
 *.elc
+*.eln
 **/cache/
 **/packages/
 **/tree-sitter/

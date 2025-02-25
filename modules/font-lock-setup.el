@@ -13,5 +13,4 @@
 (set-face-attribute 'font-lock-builtin-face nil :weight 'medium)
 
 (global-font-lock-mode t)
-
 (provide 'font-lock-setup)

@@ -10,9 +10,9 @@
 (setopt org-edit-src-content-indentation 0)
 
 (with-eval-after-load 'org
-  (req 'org-tempo)
-  (req 'org-modern)
-  (req 'toc-org)
-  (add-hook 'org-mode-hook #'org-modern-mode))
+  (reqwire "org-tempo")
+  (reqwire "org-modern")
+  (reqwire "toc-org")
+  (global-org-modern-mode t))
 
 (provide 'org-setup)

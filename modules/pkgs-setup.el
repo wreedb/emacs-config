@@ -4,14 +4,13 @@
 (setopt package-gnupghome-dir (expand-file-name "packages/gnupghome" emacs-dir))
 (setopt package-native-compile t)
 
-(setq package-archives
+(setopt package-archives
  '(("gnu"    . "https://elpa.gnu.org/packages/")
    ("nongnu" . "https://elpa.nongnu.org/nongnu/")
    ("melpa"  . "https://melpa.org/packages/")))
 
-(req 'package)
+(reqwire "package")
 (package-initialize)
-(package-refresh-contents t)
 
 (setopt package-selected-packages
         '(async
@@ -28,6 +27,7 @@
           colorful-mode
           corfu
           org-modern
+          compile-angel
           toc-org
           dash
           dashboard
@@ -69,8 +69,10 @@
           zig-ts-mode
           just-ts-mode
           markdown-mode
-          hyprlang-ts-mode))
+          hyprlang-ts-mode
+          sudo-edit))
 
-(package-install-selected-packages t)
+(when init-pkgs
+  (init-packages))
 
 (provide 'pkgs-setup)

@@ -1,14 +1,14 @@
 ;; -*- lexical-binding: t; -*-
 
-(req 'vertico)
+(reqwire "vertico")
 (vertico-mode t)
 
-(req 'smex)
+(reqwire "smex")
 (setopt smex-save-file (expand-file-name "smex" emacs-cache))
 
-(req 'counsel)
-(req 'ivy)
-(req 'ivy-rich)
+(reqwire "counsel")
+(reqwire "ivy")
+(reqwire "ivy-rich")
 
 (counsel-mode t)
 
@@ -16,10 +16,10 @@
 (setopt ivy-initial-inputs-alist nil)
 (ivy-mode t)
 
-(req 'page-break-lines)
+(reqwire "page-break-lines")
 (global-page-break-lines-mode t)
 
-(req 'projectile)
+(reqwire "projectile")
 (mkdir-ifnot (expand-file-name "projectile" emacs-cache))
 (setopt projectile-cache-file
   (expand-file-name "projectile/cache" emacs-cache))
@@ -28,7 +28,7 @@
 
 (projectile-mode t)
 
-(req 'telephone-line)
+(reqwire "telephone-line")
 (setopt telephone-line-primary-left-separator    'telephone-line-identity-left)
 (setopt telephone-line-secondary-left-separator  'telephone-line-identity-hollow-left)
 (setopt telephone-line-primary-right-separator   'telephone-line-identity-right)

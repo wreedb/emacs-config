@@ -1,7 +1,7 @@
 ;; -*- lexical-binding: t; -*-
 
-(req 'which-key)
-(req 'general)
+(reqwire "which-key")
+(reqwire "general")
 
 ;; which-key configuration
 (setopt which-key-side-window-location 'bottom)
@@ -14,17 +14,15 @@
 (setopt which-key-idle-delay 0.6)
 (which-key-mode t)
 
-(with-eval-after-load 'undo-fu
-  (keymap-global-unset "C-z")
-  (keymap-global-set "C-z"   'undo-fu-only-undo)
-  (keymap-global-set "C-S-z" 'undo-fu-only-redo))
+(keymap-global-unset "C-z")
+(keymap-global-set "C-z"   'undo-fu-only-undo)
+(keymap-global-set "C-S-z" 'undo-fu-only-redo)
 
-(with-eval-after-load 'ivy
-  (keymap-global-unset "M-x")
-  (keymap-global-unset "C-x C-f")
-  (keymap-global-set "C-x C-f" 'counsel-find-file)
-  (keymap-global-set "C-x M-x" 'execute-extended-command)
-  (keymap-global-set "M-x" 'counsel-M-x))
+(keymap-global-unset "M-x")
+(keymap-global-unset "C-x C-f")
+(keymap-global-set "C-x C-f" 'counsel-find-file)
+(keymap-global-set "C-x M-x" 'execute-extended-command)
+(keymap-global-set "M-x" 'counsel-M-x)
 
 (with-eval-after-load 'projectile
   (keymap-global-set "C-c p" 'projectile-command-map))
@@ -96,6 +94,7 @@
 (general-keys
   "r"     '(:ignore t           :wk "reload")
   "r r"   '(revert-buffer-quick :wk "reload buffer")
+  "r f"   '(reload/font-lock    :wk "reload font-lock")
   "r e"   '(:ignore t           :wk "emacs dir")
   "r e i" '((lambda () (interactive) (load user-init-file)) :wk "load init.el")
   "r e e" '((lambda () (interactive) (load (expand-file-name "early-init.el" emacs-dir))) :wk "load early-init.el"))
@@ -132,12 +131,15 @@
   (general-keys
     "o"   '(:ignore t              :wk "org")
     "o i" '(org-toggle-item        :wk "toggle org item")
+    "o s" '(tempo-template-org-src :wk "insert src block")
     "o x" '(org-export-dispatch    :wk "org export dispatch")))
 
 ;; bytecomp commands
 (general-keys
   "c"   '(:ignore t               :wk "byte-compile")
-  "c c" '(elisp-byte-compile-file :wk "byte-compile file"))
+  "c c" '(elisp-byte-compile-file :wk "byte-compile file")
+  "c n" '(emacs-lisp-native-compile :wk "native compile elisp")
+  "c N" '(emacs-lisp-native-compile-and-load :wk "native compile elisp + load"))
 
 ;; loading commands
 (general-keys

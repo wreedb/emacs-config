@@ -1,7 +1,6 @@
 ;; -*- lexical-binding: t; -*-
 
-(with-eval-after-load 'v-mode
-  (advice-add 'v-after-save-hook :override #'(lambda () (message "[emacs] *>>> saved file"))))
+(advice-add 'v-after-save-hook :override #'(lambda () (message "[emacs] *>>> saved file")))
 
 (setq auto-mode-alist
  (append
