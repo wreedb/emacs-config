@@ -4,25 +4,29 @@
   (concat (getenv "HOME") "/")
   "home (~) directory")
 
-(defconst emacs-dir
+(defconst emacs/dir
   (format "%s" user-emacs-directory)
-  "Emacs config directory")
+  "~/.config/emacs")
 
-(defconst emacs-cache
-  (concat emacs-dir "cache/")
-  "Emacs config subdirectory for cached files")
+(defconst emacs/local
+  (concat emacs/dir "local/")
+  "local lisp files")
 
-(defconst emacs-modules
-  (concat emacs-dir "modules/")
-  "Directory for modular Emacs configurations")
+(defconst emacs/cache
+  (concat emacs/dir "cache/")
+  "cache for emacs files")
 
-(defconst emacs-local
-  (concat emacs-dir "local/")
-  "Directory for locally installed elisp files")
+(defconst emacs/assets
+  (concat emacs/dir "assets/")
+  "images and ascii files")
 
-(defconst emacs-assets
-  (concat emacs-dir "assets/")
-  "Directory to store images and other files for use in configuration")
+(defconst emacs/early-init
+  (concat emacs/dir "early-init.el")
+  "Emacs early init file")
+
+(defconst emacs/init-file
+  (format "%s" user-init-file)
+  "Emacs init file")
 
 (defconst xdg/config-home
   (concat home-dir ".config/")
@@ -72,10 +76,54 @@
   (concat home-dir "Music/")
   "~/Music")
 
-(defun reload/font-lock ()
+;; NOTE: functions
+(defun eval/buffer ()
+  "Evaluate buffer"
   (interactive)
-  (require 'font-lock-setup)
-  (message "[emacs] *>>> reload: font-lock settings"))
+  (eval-buffer))
+
+(defun open/init-file ()
+  "Open 'init.el'"
+  (interactive)
+  (find-file user-init-file))
+
+(defun open/early-init ()
+  "Open 'early-init.el'"
+  (interactive)
+  (find-file emacs/early-init))
+
+(defun kill/other-buffers ()
+  "Kill all other buffers"
+  (interactive)
+  (mapc 'kill-buffer (delq (current-buffer) (buffer-list)))
+  (message "[emacs] *>>> killed: %s" (delq (current-buffer) (buffer-list))))
+
+(defun kill/current-buffer ()
+  "kill current buffer"
+  (interactive)
+  (kill-buffer (current-buffer)))
+
+(defun load/this-file ()
+  "load active buffers' file"
+  (interactive)
+  (load-file (buffer-file-name)))
+
+(defun reload/font ()
+  (interactive)
+  (load-library "fonts-and-ligatures")
+  (message "[emacs] *>>> reload: font"))
+
+(defun reload/init-file ()
+  (interactive)
+  (load user-init-file))
+
+(defun reload/early-init ()
+  (interactive)
+  (load emacs/early-init))
+
+(defun reload/buffer ()
+  (interactive)
+  (revert-buffer-quick))
 
 (defun mkdir-ifnot (dir)
   "Create directory if not already created"
@@ -83,18 +131,12 @@
     (mkdir dir)
     (message "[emacs] *>>> mkdir: %s" dir)))
 
-(defun init-packages ()
-  "Manually start package.el and install all packages"
-  (interactive)
-  (package-refresh-contents)
-  (package-install-selected-packages t))
-
 (defun add-hook-list (target modes)
   "Add HOOK to all members of list MODES"
   (let ((new-hooks modes))
     (mapc (lambda (hook) (add-hook hook target)) new-hooks)))
 
-
+;; tree-sitter
 (defun batch-install-treesit-parsers ()
   "Install all treesitter parsers back-to-back"
   (interactive)

@@ -7,4 +7,3 @@ insert_final_newline = false
 
 [*.el]
 indent_style = space
-indent_size = 2

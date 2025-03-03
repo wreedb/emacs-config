@@ -1,6 +1,8 @@
 # -*- mode: conf-unix; -*-
+eln-cache/
+tree-sitter/
+cache/
+auto-save-list/
+packages/
 *.elc
 *.eln
-**/cache/
-**/packages/
-**/tree-sitter/

@@ -1,0 +1,3 @@
+--ignore=".editorconfig"
+--ignore=".stowrc"
+--verbose=1
