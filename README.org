@@ -1,20 +1,10 @@
 #+AUTHOR: Will Reed
 
+*** NOTE:
+My configuration (mostly) can be viewed as a literate org document [[file:./emacs/README.org][here]].
+
 I decided to separate my Emacs configuration from my [[https://github.com/wreedb/config][wreedb/config]] repository 
 because my Emacs directory became more elaborate than anything else in 
 =~/.config=. I also have started preaching the good word of Emacs, so having 
 a repository to send people to that just has my Emacs configuration and 
 nothing else is more sensible.
-
-*** Considerations
-- No use-package
-  * Confusing interactions with themes and font-lock
-  * Sluggish performance
-- Elpaca ([[https://github.com/progfolio/elpaca][link]])
-  * Fast async package installs
-- Keeping =~/.config/emacs= strictly clean
-  * No littering of backup/autosave files or package
-    specific directories outside of the cache directory
-- Absolutely NO ~customize~ interface
-  * The cusomize interface is a thorn in my side
-- Very featureful but also very lightweight

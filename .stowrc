@@ -1,3 +1,4 @@
 --ignore=".editorconfig"
 --ignore=".stowrc"
+--ignore="emacs/cache"
 --verbose=1
