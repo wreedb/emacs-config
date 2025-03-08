@@ -1,17 +1,31 @@
 #+AUTHOR: Will Reed
 #+DESCRIPTION: My emacs config
 #+PROPERTY: header-args :tangle init.el
-#+STARTUP: fold
 
 * INDEX :TOC:
 - [[#constants][Constants]]
   - [[#emacs-directories-and-files][Emacs directories and files]]
   - [[#notable-directories][Notable directories]]
 - [[#functions][Functions]]
-- [[#packages][Packages]]
+  - [[#font-setup][Font setup]]
+  - [[#misc][Misc]]
+- [[#package-setup][Package Setup]]
   - [[#manifest][Manifest]]
-  - [[#setup][Setup]]
-  - [[#leaves][Leaves]]
+  - [[#settings][Settings]]
+- [[#leaves][Leaves]]
+  - [[#generic-libraries][Generic libraries]]
+  - [[#emacs-itself][Emacs Itself]]
+  - [[#non-upgraded-builtins][Non-upgraded builtins]]
+  - [[#upgraded-builtins][Upgraded builtins]]
+  - [[#org-mode-and-extensions][Org mode and extensions]]
+  - [[#nerd-icons][Nerd Icons]]
+  - [[#enhanced-features][Enhanced features]]
+  - [[#evil][Evil]]
+  - [[#syntax-and-editing][Syntax and editing]]
+  - [[#utilities][Utilities]]
+  - [[#font-ligatures][Font ligatures]]
+  - [[#theming][Theming]]
+  - [[#language-modes][Language Modes]]
 - [[#keys][Keys]]
   - [[#which-key-setup][which key setup]]
   - [[#setup-leader-key][Setup leader key]]
@@ -29,6 +43,7 @@
   - [[#compiling-elisp][Compiling elisp]]
   - [[#loading][Loading]]
   - [[#undo][Undo]]
+- [[#after-init][After init]]
 - [[#splash-screen][Splash screen]]
 
 * Constants
@@ -39,10 +54,6 @@
 (defconst emacs/dir
   (format "%s" user-emacs-directory)
   "~/.config/emacs")
-
-(defconst emacs/local
-  (expand-file-name "local" emacs/dir)
-  "local lisp files")
 
 (defconst emacs/cache
   (expand-file-name "cache" emacs/dir)
@@ -71,6 +82,10 @@
 (defconst emacs/init-file
   (format "%s" user-init-file)
   "Emacs init file")
+
+(defconst emacs/literate-config
+  (expand-file-name "README.org" emacs/dir)
+  "Literate Emacs configuration document")
 #+END_SRC
 
 ** Notable directories
@@ -129,6 +144,60 @@
 #+END_SRC
 
 * Functions
+** Font setup
+#+BEGIN_SRC emacs-lisp
+(defun reload/font ()
+  "reload font/font-lock settings"
+  (interactive)
+  (set-face-attribute 'default nil
+    :family "JetBrains Mono"
+	:weight 'medium
+    :height 140)
+
+  (set-face-attribute 'fixed-pitch nil
+	:family "JetBrains Mono"
+	:weight 'medium
+	:height 140)
+  
+  (set-face-attribute 'variable-pitch nil
+	:family "Roboto"
+	:weight 'medium
+	:width 'condensed
+	:height 140)
+
+  ;; this must be a bug...
+  (set-face-attribute 'help-key-binding nil
+    :background 'unspecified
+    :foreground 'unspecified
+    :slant 'italic
+    :weight 'bold
+    :box nil)
+  
+  ;; fallback icons
+  (set-fontset-font t nil (font-spec
+	:size 14
+	:dpi 96
+	:name "Symbols Nerd Font Mono"))
+
+  (setq-local font-lock-italics
+   '(font-lock-comment-face
+	 font-lock-comment-delimiter-face
+	 font-lock-keyword-face))
+
+  (dolist (face font-lock-italics)
+	(set-face-attribute face nil :slant 'italic))
+  
+  (set-face-attribute 'font-lock-builtin-face nil :weight 'medium)
+
+  (with-eval-after-load 'org-modern
+	(set-face-attribute 'org-modern-symbol nil
+	  :family "Iosevka Term"
+	  :weight 'medium
+	  :width 'expanded
+	  :height 140)))
+#+END_SRC
+
+** Misc
 #+BEGIN_SRC emacs-lisp
 (defun efn (name basedir)
   "shorthand of 'expand-file-name' with BASEDIR required"
@@ -169,29 +238,9 @@
   (interactive)
   (load emacs/early-init))
 
-(defun reload/font ()
-  "reload font/font-lock settings"
-  (interactive)
-  (set-face-attribute 'default nil
-    :family "JetBrains Mono"
-    :height '140)
-  (set-face-attribute 'help-key-binding nil
-    :background nil
-    :foreground nil
-    :slant 'italic
-    :weight 'bold
-    :box nil)
-  (set-fontset-font t nil (font-spec :size 14 :name "Symbols Nerd Font Mono"))
-  (set-face-attribute 'font-lock-comment-face nil :slant 'italic)
-  (set-face-attribute 'font-lock-comment-delimiter-face nil :slant 'italic)
-  (set-face-attribute 'font-lock-keyword-face nil :slant 'italic)
-  (set-face-attribute 'font-lock-builtin-face nil :weight 'medium)
-  (message "[emacs] *>>> reloaded fonts"))
-
 (defun load/this-file ()
   "load active buffers' file"
   (interactive)
-  (message "[emacs] *>>> loading %s" (buffer-file-name))
   (load (buffer-file-name)))
 
 (defun kill/current-buffer ()
@@ -203,6 +252,11 @@
   "kill all other buffers"
   (interactive)
   (mapc 'kill-buffer (delq (current-buffer) (buffer-list))))
+
+(defun open/config-org ()
+  "Open literate org emacs config for editing"
+  (interactive)
+  (find-file emacs/literate-config))
 
 (defun open/init-file ()
   "open the emacs 'init.el' file for editing"
@@ -225,7 +279,7 @@
 
 #+END_SRC
 
-* Packages
+* Package Setup
 ** Manifest
 #+BEGIN_SRC emacs-lisp
 (defconst package-selected-packages '(
@@ -263,7 +317,7 @@
   fish-mode v-mode))
 #+END_SRC
 
-** Setup
+** Settings
 #+BEGIN_SRC emacs-lisp
 ;; use native-comp when available
 (when (native-comp-available-p)
@@ -308,8 +362,8 @@
 (provide 'package-setup)
 #+END_SRC
 
-** Leaves
-*** Generic libraries
+* Leaves
+** Generic libraries
 #+BEGIN_SRC emacs-lisp
 (leaf f
   :package t
@@ -356,7 +410,7 @@
   :leaf-autoload t)
 #+END_SRC
 
-*** Emacs Itself
+** Emacs Itself
 #+BEGIN_SRC emacs-lisp
 (leaf emacs
   :package nil
@@ -381,7 +435,7 @@
    '(prog-mode-hook org-mode-hook conf-mode-hook)))
 #+END_SRC
 
-*** Non-upgraded builtins
+** Non-upgraded builtins
 #+BEGIN_SRC emacs-lisp
 (leaf compat
   :package nil
@@ -483,13 +537,11 @@
 (leaf font-lock
   :package nil
   :require t
-  :after (ligature doom-themes kaolin-themes one-themes catppuccin-theme)
   :config
-  (add-hook 'after-init-hook #'reload/font)
   :global-minor-mode global-font-lock-mode)
 #+END_SRC
 
-*** Upgraded builtins
+** Upgraded builtins
 #+BEGIN_SRC emacs-lisp
 (leaf tramp
   :package t
@@ -516,7 +568,7 @@
      (rust-ts-mode . ("rust-analyzer")))))
 #+END_SRC
 
-*** Org mode and extensions
+** Org mode and extensions
 #+BEGIN_SRC emacs-lisp
 (leaf org
   :package t
@@ -537,7 +589,6 @@
 (leaf org-modern
   :package t
   :after (org)
-  :config (set-face-attribute 'org-modern-symbol nil :family "Iosevka Term Curly")
   :hook org-mode-hook)
 
 (leaf toc-org
@@ -551,8 +602,7 @@
   :after (org))
 #+END_SRC
 
-*** Nerd Icons
-Integration for dired, ibuffer and corfu
+** Nerd Icons
 #+BEGIN_SRC emacs-lisp
 (leaf nerd-icons
   :package t
@@ -575,7 +625,7 @@ Integration for dired, ibuffer and corfu
   (setopt corfu-margin-formatters (cons #'nerd-icons-corfu-formatter corfu-margin-formatters)))
 #+END_SRC
 
-*** Enhanced features
+** Enhanced features
 #+BEGIN_SRC emacs-lisp
 (leaf undo-fu
   :package t
@@ -649,8 +699,7 @@ Integration for dired, ibuffer and corfu
   (global-corfu-mode t))
 #+END_SRC
 
-*** Evil
-Why leave Vim when you don't have to?
+** Evil
 #+BEGIN_SRC emacs-lisp
 (leaf evil
   :require t
@@ -670,8 +719,7 @@ Why leave Vim when you don't have to?
   :config (evil-collection-init))
 #+END_SRC
 
-*** Syntax and editing
-Stuff to make editing look better and easier on the eyes
+** Syntax and editing
 #+BEGIN_SRC emacs-lisp
 (leaf centered-cursor-mode
   :package t
@@ -707,7 +755,7 @@ Stuff to make editing look better and easier on the eyes
   :global-minor-mode global-hl-todo-mode)
 #+END_SRC
 
-*** Utilities
+** Utilities
 #+BEGIN_SRC emacs-lisp
 (leaf helpful
   :package t
@@ -734,7 +782,7 @@ Stuff to make editing look better and easier on the eyes
   (keymap-set global-map "C-x C-d" 'dired-sidebar-toggle-sidebar))
 #+END_SRC
 
-*** Font ligatures
+** Font ligatures
 #+BEGIN_SRC emacs-lisp
 (leaf ligature
   :package t
@@ -755,7 +803,7 @@ Stuff to make editing look better and easier on the eyes
   :global-minor-mode global-ligature-mode)
 #+END_SRC
 
-*** Modeline and themes
+** Theming
 #+BEGIN_SRC emacs-lisp
 (leaf page-break-lines
   :package t
@@ -777,7 +825,7 @@ Stuff to make editing look better and easier on the eyes
 
 (leaf doom-themes
   :package t
-  :require t
+  :require nil
   :config
   (setq doom-themes-enable-bold t)
   (setq doom-themes-enable-italic t)
@@ -785,18 +833,19 @@ Stuff to make editing look better and easier on the eyes
 
 (leaf catppuccin-theme
   :package t
-  :require t)
+  :require nil)
 
 (leaf one-themes
   :package t
-  :require t)
+  :require nil)
 
 (leaf kaolin-themes
   :package t
-  :require t)
+  :require t
+  :config (load-theme 'kaolin-dark t))
 #+END_SRC
 
-*** Language Modes
+** Language Modes
 #+BEGIN_SRC emacs-lisp
 (leaf fish-mode
   :package t
@@ -879,6 +928,11 @@ Stuff to make editing look better and easier on the eyes
 (evil-define-key 'visual ibuffer-mode-map (kbd "SPC") leadkey)
 (evil-define-key 'normal splash-screen-keymap (kbd "SPC") leadkey)
 (evil-define-key 'visual splash-screen-keymap (kbd "SPC") leadkey)
+
+(with-eval-after-load 'evil-maps
+  (keymap-unset evil-motion-state-map "SPC")
+  (keymap-unset evil-motion-state-map "RET")
+  (keymap-unset evil-motion-state-map "TAB"))
 
 (with-eval-after-load 'org
   (evil-define-key 'normal org-mode-map (kbd "SPC") leadkey)
@@ -1008,7 +1062,7 @@ Stuff to make editing look better and easier on the eyes
 #+BEGIN_SRC emacs-lisp
 (defvar-keymap       leadkey/compile)
 (keybind "SPC"   "c" leadkey         "compile" leadkey/compile)
-(keybind "SPC c" "c" leadkey/compile "byte-compile" #'byte-compile-file)
+(keybind "SPC c" "c" leadkey/compile "byte-compile" #'(lambda () (interactive) (byte-compile-file (buffer-file-name))))
 (keybind "SPC c" "n" leadkey/compile "native-compile" #'emacs-lisp-native-compile)
 (keybind "SPC c" "N" leadkey/compile "native-compile+load" #'emacs-lisp-native-compile-and-load)
 #+END_SRC
@@ -1029,6 +1083,20 @@ Stuff to make editing look better and easier on the eyes
 (keybind "SPC u" "u" leadkey/undo "undo" #'undo-fu-only-undo)
 (keybind "SPC u" "r" leadkey/undo "redo" #'undo-fu-only-redo)
 (keybind "SPC u" "R" leadkey/undo "redo all" #'undo-fu-only-redo-all)
+#+END_SRC
+
+* After init
+#+BEGIN_SRC emacs-lisp
+(defun after-init-org-require ()
+  "Load org mode after init finishes"
+  (interactive)
+  (require 'org)
+  (require 'org-contrib)
+  (require 'org-modern)
+  (require 'toc-org))
+
+(add-hook 'after-init-hook #'reload/font)
+(add-hook 'after-init-hook #'after-init-org-require)
 #+END_SRC
 
 * Splash screen
@@ -1059,8 +1127,12 @@ Stuff to make editing look better and easier on the eyes
 	     ,(lambda (_button) (dired-sidebar-toggle-sidebar user-emacs-directory))
 	     "Open ~/.config/emacs directory")
      "] Emacs Directory\n["
+	 :link `("o"
+         ,(lambda (_button) (open/config-org))
+		 "Open literate Emacs configuration")
+	 "] Open Literate Emacs Configuration\n["
      :link `("i"
-	     ,(lambda (_button) (find-file user-init-file))
+	     ,(lambda (_button) (open/init-file))
 	     "Open ~/.config/emacs/init.el")
      "] Edit Init File\n["
      :link `("c"
@@ -1078,20 +1150,22 @@ Stuff to make editing look better and easier on the eyes
 (defun splash-goto-emacsdir ()
   (interactive)
   (goto-char 128))
-(defun splash-goto-initfile ()
+(defun splash-goto-literate-config ()
   (interactive)
   (goto-char 148))
-
-(defun splash-goto-configdir ()
-  (interactive)
-  (goto-char 167))
-
-(defun splash-goto-projects ()
+(defun splash-goto-initfile ()
   (interactive)
   (goto-char 186))
+(defun splash-goto-configdir ()
+  (interactive)
+  (goto-char 205))
+(defun splash-goto-projects ()
+  (interactive)
+  (goto-char 224))
 
 (evil-define-key 'normal splash-screen-keymap (kbd "r") #'splash-goto-recentf)
 (evil-define-key 'normal splash-screen-keymap (kbd "e") #'splash-goto-emacsdir)
+(evil-define-key 'normal splash-screen-keymap (kbd "o") #'splash-goto-literate-config)
 (evil-define-key 'normal splash-screen-keymap (kbd "i") #'splash-goto-initfile)
 (evil-define-key 'normal splash-screen-keymap (kbd "c") #'splash-goto-configdir)
 (evil-define-key 'normal splash-screen-keymap (kbd "p") #'splash-goto-projects)

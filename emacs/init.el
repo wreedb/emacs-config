@@ -4,10 +4,6 @@
   (format "%s" user-emacs-directory)
   "~/.config/emacs")
 
-(defconst emacs/local
-  (expand-file-name "local" emacs/dir)
-  "local lisp files")
-
 (defconst emacs/cache
   (expand-file-name "cache" emacs/dir)
   "cache for emacs files")
@@ -35,6 +31,10 @@
 (defconst emacs/init-file
   (format "%s" user-init-file)
   "Emacs init file")
+
+(defconst emacs/literate-config
+  (expand-file-name "README.org" emacs/dir)
+  "Literate Emacs configuration document")
 
 (defconst home-dir
   (format "%s/" (getenv "HOME"))
@@ -88,6 +88,56 @@
   (expand-file-name "Music" home-dir)
   "~/Music")
 
+(defun reload/font ()
+  "reload font/font-lock settings"
+  (interactive)
+  (set-face-attribute 'default nil
+    :family "JetBrains Mono"
+	:weight 'medium
+    :height 140)
+
+  (set-face-attribute 'fixed-pitch nil
+	:family "JetBrains Mono"
+	:weight 'medium
+	:height 140)
+  
+  (set-face-attribute 'variable-pitch nil
+	:family "Roboto"
+	:weight 'medium
+	:width 'condensed
+	:height 140)
+
+  ;; this must be a bug...
+  (set-face-attribute 'help-key-binding nil
+    :background 'unspecified
+    :foreground 'unspecified
+    :slant 'italic
+    :weight 'bold
+    :box nil)
+  
+  ;; fallback icons
+  (set-fontset-font t nil (font-spec
+	:size 14
+	:dpi 96
+	:name "Symbols Nerd Font Mono"))
+
+  (setq-local font-lock-italics
+   '(font-lock-comment-face
+	 font-lock-comment-delimiter-face
+	 font-lock-keyword-face))
+
+  (dolist (face font-lock-italics)
+	(set-face-attribute face nil :slant 'italic))
+  
+  (set-face-attribute 'font-lock-builtin-face nil :weight 'medium)
+
+  (with-eval-after-load 'org-modern
+	(set-face-attribute 'org-modern-symbol nil
+	  :family "Iosevka Term"
+	  :weight 'medium
+	  :width 'expanded
+	  :height 140)))
+
 (defun efn (name basedir)
   "shorthand of 'expand-file-name' with BASEDIR required"
   (expand-file-name name basedir))
@@ -127,29 +177,9 @@
   (interactive)
   (load emacs/early-init))
 
-(defun reload/font ()
-  "reload font/font-lock settings"
-  (interactive)
-  (set-face-attribute 'default nil
-    :family "JetBrains Mono"
-    :height '140)
-  (set-face-attribute 'help-key-binding nil
-    :background nil
-    :foreground nil
-    :slant 'italic
-    :weight 'bold
-    :box nil)
-  (set-fontset-font t nil (font-spec :size 14 :name "Symbols Nerd Font Mono"))
-  (set-face-attribute 'font-lock-comment-face nil :slant 'italic)
-  (set-face-attribute 'font-lock-comment-delimiter-face nil :slant 'italic)
-  (set-face-attribute 'font-lock-keyword-face nil :slant 'italic)
-  (set-face-attribute 'font-lock-builtin-face nil :weight 'medium)
-  (message "[emacs] *>>> reloaded fonts"))
-
 (defun load/this-file ()
   "load active buffers' file"
   (interactive)
-  (message "[emacs] *>>> loading %s" (buffer-file-name))
   (load (buffer-file-name)))
 
 (defun kill/current-buffer ()
@@ -161,6 +191,11 @@
   "kill all other buffers"
   (interactive)
   (mapc 'kill-buffer (delq (current-buffer) (buffer-list))))
+
+(defun open/config-org ()
+  "Open literate org emacs config for editing"
+  (interactive)
+  (find-file emacs/literate-config))
 
 (defun open/init-file ()
   "open the emacs 'init.el' file for editing"
@@ -423,9 +458,7 @@
 (leaf font-lock
   :package nil
   :require t
-  :after (ligature doom-themes kaolin-themes one-themes catppuccin-theme)
   :config
-  (add-hook 'after-init-hook #'reload/font)
   :global-minor-mode global-font-lock-mode)
 
 (leaf tramp
@@ -471,7 +504,6 @@
 (leaf org-modern
   :package t
   :after (org)
-  :config (set-face-attribute 'org-modern-symbol nil :family "Iosevka Term Curly")
   :hook org-mode-hook)
 
 (leaf toc-org
@@ -687,7 +719,7 @@
 
 (leaf doom-themes
   :package t
-  :require t
+  :require nil
   :config
   (setq doom-themes-enable-bold t)
   (setq doom-themes-enable-italic t)
@@ -695,15 +727,16 @@
 
 (leaf catppuccin-theme
   :package t
-  :require t)
+  :require nil)
 
 (leaf one-themes
   :package t
-  :require t)
+  :require nil)
 
 (leaf kaolin-themes
   :package t
-  :require t)
+  :require t
+  :config (load-theme 'kaolin-dark t))
 
 (leaf fish-mode
   :package t
@@ -779,6 +812,11 @@
 (evil-define-key 'visual ibuffer-mode-map (kbd "SPC") leadkey)
 (evil-define-key 'normal splash-screen-keymap (kbd "SPC") leadkey)
 (evil-define-key 'visual splash-screen-keymap (kbd "SPC") leadkey)
+
+(with-eval-after-load 'evil-maps
+  (keymap-unset evil-motion-state-map "SPC")
+  (keymap-unset evil-motion-state-map "RET")
+  (keymap-unset evil-motion-state-map "TAB"))
 
 (with-eval-after-load 'org
   (evil-define-key 'normal org-mode-map (kbd "SPC") leadkey)
@@ -872,7 +910,7 @@
 
 (defvar-keymap       leadkey/compile)
 (keybind "SPC"   "c" leadkey         "compile" leadkey/compile)
-(keybind "SPC c" "c" leadkey/compile "byte-compile" #'byte-compile-file)
+(keybind "SPC c" "c" leadkey/compile "byte-compile" #'(lambda () (interactive) (byte-compile-file (buffer-file-name))))
 (keybind "SPC c" "n" leadkey/compile "native-compile" #'emacs-lisp-native-compile)
 (keybind "SPC c" "N" leadkey/compile "native-compile+load" #'emacs-lisp-native-compile-and-load)
 
@@ -887,6 +925,17 @@
 (keybind "SPC u" "u" leadkey/undo "undo" #'undo-fu-only-undo)
 (keybind "SPC u" "r" leadkey/undo "redo" #'undo-fu-only-redo)
 (keybind "SPC u" "R" leadkey/undo "redo all" #'undo-fu-only-redo-all)
+
+(defun after-init-org-require ()
+  "Load org mode after init finishes"
+  (interactive)
+  (require 'org)
+  (require 'org-contrib)
+  (require 'org-modern)
+  (require 'toc-org))
+
+(add-hook 'after-init-hook #'reload/font)
+(add-hook 'after-init-hook #'after-init-org-require)
 
 (defconst fancy-startup-text
   `((:face (variable-pitch font-lock-comment-face)
@@ -914,8 +963,12 @@
 	     ,(lambda (_button) (dired-sidebar-toggle-sidebar user-emacs-directory))
 	     "Open ~/.config/emacs directory")
      "] Emacs Directory\n["
+	 :link `("o"
+         ,(lambda (_button) (open/config-org))
+		 "Open literate Emacs configuration")
+	 "] Open Literate Emacs Configuration\n["
      :link `("i"
-	     ,(lambda (_button) (find-file user-init-file))
+	     ,(lambda (_button) (open/init-file))
 	     "Open ~/.config/emacs/init.el")
      "] Edit Init File\n["
      :link `("c"
@@ -933,20 +986,22 @@
 (defun splash-goto-emacsdir ()
   (interactive)
   (goto-char 128))
-(defun splash-goto-initfile ()
+(defun splash-goto-literate-config ()
   (interactive)
   (goto-char 148))
-
-(defun splash-goto-configdir ()
-  (interactive)
-  (goto-char 167))
-
-(defun splash-goto-projects ()
+(defun splash-goto-initfile ()
   (interactive)
   (goto-char 186))
+(defun splash-goto-configdir ()
+  (interactive)
+  (goto-char 205))
+(defun splash-goto-projects ()
+  (interactive)
+  (goto-char 224))
 
 (evil-define-key 'normal splash-screen-keymap (kbd "r") #'splash-goto-recentf)
 (evil-define-key 'normal splash-screen-keymap (kbd "e") #'splash-goto-emacsdir)
+(evil-define-key 'normal splash-screen-keymap (kbd "o") #'splash-goto-literate-config)
 (evil-define-key 'normal splash-screen-keymap (kbd "i") #'splash-goto-initfile)
 (evil-define-key 'normal splash-screen-keymap (kbd "c") #'splash-goto-configdir)
 (evil-define-key 'normal splash-screen-keymap (kbd "p") #'splash-goto-projects)
