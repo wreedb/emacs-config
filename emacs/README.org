@@ -48,6 +48,7 @@
 
 * Constants
 ** Emacs directories and files
+[[#index][back to top]]
 #+BEGIN_SRC emacs-lisp
 ;; -*- lexical-binding: t; -*-
 
@@ -89,6 +90,7 @@
 #+END_SRC
 
 ** Notable directories
+[[#index][back to top]]
 #+BEGIN_SRC emacs-lisp
 (defconst home-dir
   (format "%s/" (getenv "HOME"))
@@ -145,6 +147,7 @@
 
 * Functions
 ** Font setup
+[[#index][back to top]]
 #+BEGIN_SRC emacs-lisp
 (defun reload/font ()
   "reload font/font-lock settings"
@@ -198,6 +201,7 @@
 #+END_SRC
 
 ** Misc
+[[#index][back to top]]
 #+BEGIN_SRC emacs-lisp
 (defun efn (name basedir)
   "shorthand of 'expand-file-name' with BASEDIR required"
@@ -281,6 +285,7 @@
 
 * Package Setup
 ** Manifest
+[[#index][back to top]]
 #+BEGIN_SRC emacs-lisp
 (defconst package-selected-packages '(
   ;; generic libraries
@@ -318,6 +323,7 @@
 #+END_SRC
 
 ** Settings
+[[#index][back to top]]
 #+BEGIN_SRC emacs-lisp
 ;; use native-comp when available
 (when (native-comp-available-p)
@@ -364,6 +370,7 @@
 
 * Leaves
 ** Generic libraries
+[[#index][back to top]]
 #+BEGIN_SRC emacs-lisp
 (leaf f
   :package t
@@ -411,6 +418,7 @@
 #+END_SRC
 
 ** Emacs Itself
+[[#index][back to top]]
 #+BEGIN_SRC emacs-lisp
 (leaf emacs
   :package nil
@@ -436,6 +444,7 @@
 #+END_SRC
 
 ** Non-upgraded builtins
+[[#index][back to top]]
 #+BEGIN_SRC emacs-lisp
 (leaf compat
   :package nil
@@ -542,6 +551,7 @@
 #+END_SRC
 
 ** Upgraded builtins
+[[#index][back to top]]
 #+BEGIN_SRC emacs-lisp
 (leaf tramp
   :package t
@@ -569,6 +579,7 @@
 #+END_SRC
 
 ** Org mode and extensions
+[[#index][back to top]]
 #+BEGIN_SRC emacs-lisp
 (leaf org
   :package t
@@ -603,6 +614,7 @@
 #+END_SRC
 
 ** Nerd Icons
+[[#index][back to top]]
 #+BEGIN_SRC emacs-lisp
 (leaf nerd-icons
   :package t
@@ -626,6 +638,7 @@
 #+END_SRC
 
 ** Enhanced features
+[[#index][back to top]]
 #+BEGIN_SRC emacs-lisp
 (leaf undo-fu
   :package t
@@ -700,6 +713,7 @@
 #+END_SRC
 
 ** Evil
+[[#index][back to top]]
 #+BEGIN_SRC emacs-lisp
 (leaf evil
   :require t
@@ -720,6 +734,7 @@
 #+END_SRC
 
 ** Syntax and editing
+[[#index][back to top]]
 #+BEGIN_SRC emacs-lisp
 (leaf centered-cursor-mode
   :package t
@@ -756,6 +771,7 @@
 #+END_SRC
 
 ** Utilities
+[[#index][back to top]]
 #+BEGIN_SRC emacs-lisp
 (leaf helpful
   :package t
@@ -783,6 +799,7 @@
 #+END_SRC
 
 ** Font ligatures
+[[#index][back to top]]
 #+BEGIN_SRC emacs-lisp
 (leaf ligature
   :package t
@@ -804,6 +821,7 @@
 #+END_SRC
 
 ** Theming
+[[#index][back to top]]
 #+BEGIN_SRC emacs-lisp
 (leaf page-break-lines
   :package t
@@ -846,6 +864,7 @@
 #+END_SRC
 
 ** Language Modes
+[[#index][back to top]]
 #+BEGIN_SRC emacs-lisp
 (leaf fish-mode
   :package t
@@ -884,6 +903,7 @@
 
 * Keys
 ** which key setup
+[[#index][back to top]]
 #+BEGIN_SRC emacs-lisp
 (leaf which-key
   :package nil
@@ -906,6 +926,7 @@
 #+END_SRC
 
 ** Setup leader key
+[[#index][back to top]]
 #+BEGIN_SRC emacs-lisp
 (defun keybind (prefix suffix map desc action)
   "setup keybind with which-key description"
@@ -940,6 +961,7 @@
   #+END_SRC
 
 ** Top level keys
+[[#index][back to top]]
 #+BEGIN_SRC emacs-lisp
 (keybind "SPC" "."   leadkey "find file" #'find-file)
 (keybind "SPC" "["   leadkey "find file at-point" #'find-file-at-point)
@@ -949,6 +971,7 @@
 #+END_SRC
 
 ** Files
+[[#index][back to top]]
 #+BEGIN_SRC emacs-lisp
 (defvar-keymap         leadkey/files)
 (keybind "SPC"     "f" leadkey       "files" leadkey/files)
@@ -963,6 +986,7 @@
 #+END_SRC
 
 ** Buffers
+[[#index][back to top]]
 #+BEGIN_SRC emacs-lisp
 (defvar-keymap       leadkey/buffers)
 (keybind "SPC"   "b" leadkey         "buffers" leadkey/buffers)
@@ -974,6 +998,7 @@
 #+END_SRC
 
 ** Comments
+[[#index][back to top]]
 #+BEGIN_SRC emacs-lisp
 (defvar-keymap           leadkey/comment)
 (keybind "SPC"     "TAB" leadkey         "comment" leadkey/comment)
@@ -982,6 +1007,7 @@
 #+END_SRC
 
 ** Help and describe
+[[#index][back to top]]
 #+BEGIN_SRC emacs-lisp
 (defvar-keymap       leadkey/help)
 (keybind "SPC"   "h" leadkey      "help" leadkey/help)
@@ -993,6 +1019,7 @@
 #+END_SRC
 
 ** Window management
+[[#index][back to top]]
 #+BEGIN_SRC emacs-lisp
 (defvar-keymap       leadkey/window)
 (keybind "SPC"   "w" leadkey        "window" leadkey/window)
@@ -1006,6 +1033,7 @@
 #+END_SRC
 
 ** Dired
+[[#index][back to top]]
 #+BEGIN_SRC emacs-lisp
 (defvar-keymap       leadkey/dired)
 (keybind "SPC"   "d" leadkey       "dired" leadkey/dired)
@@ -1017,6 +1045,7 @@
 #+END_SRC
 
 ** Reloading
+[[#index][back to top]]
 #+BEGIN_SRC emacs-lisp
 (defvar-keymap       leadkey/reload)
 (keybind "SPC"   "r" leadkey        "reload" leadkey/reload)
@@ -1027,6 +1056,7 @@
 #+END_SRC
 
 ** Toggling
+[[#index][back to top]]
 #+BEGIN_SRC emacs-lisp
 (defvar-keymap       leadkey/toggle)
 (keybind "SPC"   "t" leadkey        "toggle" leadkey/toggle)
@@ -1038,6 +1068,7 @@
 #+END_SRC
 
 ** Evaluating
+[[#index][back to top]]
 #+BEGIN_SRC emacs-lisp
 (defvar-keymap       leadkey/eval)
 (keybind "SPC"   "e" leadkey      "eval" leadkey/eval)
@@ -1049,6 +1080,7 @@
 #+END_SRC
 
 ** Org mode keys
+[[#index][back to top]]
 #+BEGIN_SRC emacs-lisp
 (defvar-keymap       leadkey/org)
 (keybind "SPC"   "o" leadkey     "org" leadkey/org)
@@ -1059,6 +1091,7 @@
 #+END_SRC
 
 ** Compiling elisp
+[[#index][back to top]]
 #+BEGIN_SRC emacs-lisp
 (defvar-keymap       leadkey/compile)
 (keybind "SPC"   "c" leadkey         "compile" leadkey/compile)
@@ -1068,6 +1101,7 @@
 #+END_SRC
 
 ** Loading
+[[#index][back to top]]
 #+BEGIN_SRC emacs-lisp
 (defvar-keymap       leadkey/load)
 (keybind "SPC"   "l" leadkey      "load" leadkey/load)
@@ -1077,6 +1111,7 @@
 #+END_SRC
 
 ** Undo
+[[#index][back to top]]
 #+BEGIN_SRC emacs-lisp
 (defvar-keymap       leadkey/undo)
 (keybind "SPC"   "u" leadkey      "undo-fu" leadkey/undo)
@@ -1086,6 +1121,7 @@
 #+END_SRC
 
 * After init
+[[#index][back to top]]
 #+BEGIN_SRC emacs-lisp
 (defun after-init-org-require ()
   "Load org mode after init finishes"
@@ -1100,6 +1136,7 @@
 #+END_SRC
 
 * Splash screen
+[[#index][back to top]]
 #+BEGIN_SRC emacs-lisp
 (defconst fancy-startup-text
   `((:face (variable-pitch font-lock-comment-face)
