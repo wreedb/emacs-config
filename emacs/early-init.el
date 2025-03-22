@@ -64,3 +64,4 @@
 ;; allows me to ignore the customize interface entirely <3
 (setopt custom-file (concat user-emacs-directory "cache/custom.el"))
 (setopt safe-local-variable-directories '("~/.config/emacs"))
+(setopt load-path (cons (expand-file-name "local" user-emacs-directory) load-path))
